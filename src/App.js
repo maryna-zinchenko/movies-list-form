@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import './App.scss';
+import { MoviesList } from './components/MoviesList';
+import { NewMovie } from './components/NewMovie';
+import moviesFromServer from './api/movies.json';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends Component {
+  state = {
+    movies: moviesFromServer,
+  };
+
+  addMovie = (title, imdbId, imdbUrl, imgUrl, description) => {
+    const newMovie = {
+      key: Date.now(),
+      title,
+      description,
+      imgUrl,
+      imdbUrl,
+      imdbId,
+    };
+
+    this.setState(prevState => ({
+      movies: [
+        ...prevState.movies,
+        newMovie,
+      ],
+    }));
+  };
+
+  render() {
+    const { movies } = this.state;
+
+    return (
+      <div className="page">
+        <div className="page-content">
+          <MoviesList movies={movies} />
+        </div>
+        <div className="sidebar">
+          <NewMovie onAdd={this.addMovie} />
+        </div>
+      </div>
+    );
+  }
 }
-
-export default App;
